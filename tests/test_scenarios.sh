@@ -9,9 +9,9 @@ echo "--- Test 1: SIGUSR1 Status Report ---"
 kill -SIGUSR1 $WD_PID
 sleep 1
 
-echo "--- Test 2: Unexpected Termination & Restart Limit (SIGKILL) ---"
+echo "--- Test 2: Unexpected Termination & Restart Limit (SIGKILL on loop worker) ---"
 for i in 1 2 3 4; do
-    W_PID=$(pgrep -P $WD_PID worker | head -n 1)
+    W_PID=$(pgrep -f "workers/worker loop" | head -n 1)
     if [ -n "$W_PID" ]; then
         kill -9 $W_PID
         sleep 2
