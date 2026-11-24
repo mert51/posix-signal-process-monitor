@@ -1,6 +1,6 @@
 #include <signal.h>
 #include <stdio.h>
-
+#include <time.h>
 #include "logger.h"
 #include "signal_manager.h"
 
@@ -10,6 +10,44 @@ int  pm_start_all(void);
 void pm_handle_children(void);
 void pm_periodic_check(void);
 void pm_report_status(void);
+void pm_stop_restarting(void);
+void pm_terminate_all(void);
+void pm_kill_remaining(void);
+int  pm_alive_count(void);
+
+
+#define SHUTDOWN_TIMEOUT_SEC 5
+
+/*
+ * Stop restarting workers, ask them to exit with SIGTERM, and give them
+ * a few seconds. Anything still alive after that gets SIGKILL. Every
+ * child is reaped so no zombies are left behind.
+ */
+static void graceful_shutdown(void)
+{
+    time_t start;
+    struct timespec pause_for = {0, 100000000L}; /* 100 ms */
+
+    log_write("INFO", 0, "shutdown requested, stopping workers");
+    pm_stop_restarting();
+    pm_terminate_all();
+
+    start = time(NULL);
+    while (pm_alive_count() > 0) {
+        pm_handle_children();
+        if (pm_alive_count() == 0)
+            break;
+        if (time(NULL) - start >= SHUTDOWN_TIMEOUT_SEC) {
+            log_write("WARN", 0, "timeout reached, sending SIGKILL");
+            pm_kill_remaining();
+            break;
+        }
+        nanosleep(&pause_for, NULL);
+    }
+
+    pm_handle_children();   /* final reap */
+    log_write("INFO", 0, "watchdog shutdown complete");
+}
 
 int main(void)
 {
@@ -60,7 +98,7 @@ int main(void)
     }
    
 
-    log_write("INFO", 0, "shutdown requested");
+    graceful_shutdown();
     log_close();
     return 0;
 }
