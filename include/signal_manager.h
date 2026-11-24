@@ -22,3 +22,4 @@ int signal_manager_block(sigset_t *old);
 int signal_manager_restore(const sigset_t *old);
 
 #endif
+
