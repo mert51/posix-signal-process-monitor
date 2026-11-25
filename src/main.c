@@ -72,26 +72,30 @@ int main(void)
         return 1;
     }
 
-        for (;;) {
+           for (;;) {
         if (g_report_requested) {
             g_report_requested = 0;
             pm_report_status();
         }
 
+        /*
+         * Check for shutdown before reaping. On Ctrl+C the workers get
+         * SIGINT too and die; reaping them first would count that as a
+         * crash and restart them.
+         */
+        if (g_shutdown_requested)
+            break;
+
         /* The process manager checks for dead children and the timer. */
         pm_handle_children();
         pm_periodic_check();
 
-        /* Check this after the work above so a late report is not lost. */
-        if (g_shutdown_requested)
-            break;
-
         /* Sleep until any signal arrives, then loop and look at the flags. */
         sigsuspend(&old_mask);
     }
-   
 
     graceful_shutdown();
     log_close();
     return 0;
 }
+x
