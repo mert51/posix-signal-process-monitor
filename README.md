@@ -7,6 +7,7 @@ A POSIX signal-based process supervision system implemented in C for Linux envir
 - **Student 1 (Signal Management & Main Control Loop):** Mert Önder (`mert51`)
 - **Student 2 (Child Process Management):** Mert Ali Maden (`denl678`)
 - **Student 3 (Logging & Test Infrastructure):** Civancan Aktaş (`CivancanAktas`)
+
 ## Project Structure
 
 ```text
@@ -25,7 +26,7 @@ posix-signal-process-monitor/
 ├── workers/                  # Simulated child worker executables
 │   └── worker.c              # Supports normal, crash, and loop modes
 ├── tests/                    # Automated test scripts
-│   └── test_scenarios.sh     # End-to-end verification suite
+│   └── test_scenarios.sh     # End-to-end verification suite with PASS/FAIL checks
 └── docs/                     # Project documentation
     └── REPORT.pdf            # Final project report
 ```
@@ -78,8 +79,8 @@ Find the running `watchdog` PID (e.g., via `ps x | grep watchdog`) and send POSI
 
 ## Automated Test Suite
 
-Run the automated test script to verify compilation, `SIGUSR1` status reporting, `SIGKILL` crash recovery, and zombie-free `SIGTERM` shutdown:
+Run the automated test script to verify compilation, `SIGUSR1` status reporting, `SIGKILL` crash recovery (`GAVE_UP` after 3 restarts), normal worker exit, and zombie-free `SIGTERM` shutdown with automated `PASS`/`FAIL` checks:
 
 ```bash
-./tests/test_scenarios.sh
+bash tests/test_scenarios.sh
 ```
