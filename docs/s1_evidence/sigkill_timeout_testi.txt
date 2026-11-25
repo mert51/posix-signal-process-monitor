@@ -1,0 +1,16 @@
+[2026-11-25 09:36:04] [INFO] pid=0: watchdog starting
+[2026-11-25 09:36:04] [START] pid=4650: worker-1 started (./workers/worker loop 0)
+[2026-11-25 09:36:04] [START] pid=4651: worker-2 started (./workers/worker loop 0)
+[2026-11-25 09:36:04] [START] pid=4652: worker-3 started (./workers/worker normal 20)
+[2026-11-25 09:36:06] [INFO] pid=0: shutdown requested, stopping workers
+[2026-11-25 09:36:06] [SIGNAL] pid=4650: SIGTERM sent to worker-1
+[2026-11-25 09:36:06] [SIGNAL] pid=4651: SIGTERM sent to worker-2
+[2026-11-25 09:36:06] [SIGNAL] pid=4652: SIGTERM sent to worker-3
+[2026-11-25 09:36:11] [WARN] pid=0: timeout reached, sending SIGKILL
+[2026-11-25 09:36:11] [SIGNAL] pid=4650: SIGKILL sent to worker-1
+[2026-11-25 09:36:11] [EXIT] pid=4650: worker-1 stopped during shutdown: killed by signal 9 (Killed)
+[2026-11-25 09:36:11] [SIGNAL] pid=4651: SIGKILL sent to worker-2
+[2026-11-25 09:36:11] [EXIT] pid=4651: worker-2 stopped during shutdown: killed by signal 9 (Killed)
+[2026-11-25 09:36:11] [SIGNAL] pid=4652: SIGKILL sent to worker-3
+[2026-11-25 09:36:11] [EXIT] pid=4652: worker-3 stopped during shutdown: killed by signal 9 (Killed)
+[2026-11-25 09:36:11] [INFO] pid=0: watchdog shutdown complete
