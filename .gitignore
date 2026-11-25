@@ -3,3 +3,4 @@ watchdog
 *.log
 sigtest
 *~
+workers/worker
