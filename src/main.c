@@ -4,16 +4,7 @@
 #include "logger.h"
 #include "signal_manager.h"
 
-/* Provided by the process manager (stubbed for now). */
-int  pm_init(void);
-int  pm_start_all(void);
-void pm_handle_children(void);
-void pm_periodic_check(void);
-void pm_report_status(void);
-void pm_stop_restarting(void);
-void pm_terminate_all(void);
-void pm_kill_remaining(void);
-int  pm_alive_count(void);
+#include "process_manager.h"
 
 
 #define SHUTDOWN_TIMEOUT_SEC 5
@@ -73,8 +64,10 @@ int main(void)
         return 1;
     }
 
-    if (pm_init() < 0 || pm_start_all() < 0) {
+        if (pm_init() < 0 || pm_start_all() < 0) {
         log_write("ERROR", 0, "could not start worker processes");
+        /* Some workers may already be running; shut them down cleanly. */
+        graceful_shutdown();
         log_close();
         return 1;
     }
