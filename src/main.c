@@ -1,11 +1,10 @@
 #include <signal.h>
 #include <stdio.h>
 #include <time.h>
+
 #include "logger.h"
-#include "signal_manager.h"
-
 #include "process_manager.h"
-
+#include "signal_manager.h"
 
 #define SHUTDOWN_TIMEOUT_SEC 5
 
@@ -64,7 +63,7 @@ int main(void)
         return 1;
     }
 
-        if (pm_init() < 0 || pm_start_all() < 0) {
+    if (pm_init() < 0 || pm_start_all() < 0) {
         log_write("ERROR", 0, "could not start worker processes");
         /* Some workers may already be running; shut them down cleanly. */
         graceful_shutdown();
@@ -72,7 +71,7 @@ int main(void)
         return 1;
     }
 
-           for (;;) {
+    for (;;) {
         if (g_report_requested) {
             g_report_requested = 0;
             pm_report_status();
@@ -98,4 +97,3 @@ int main(void)
     log_close();
     return 0;
 }
-x
