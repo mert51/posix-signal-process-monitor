@@ -1,0 +1,12 @@
+[2026-11-26 08:33:19] [INFO] pid=0: watchdog starting
+[2026-11-26 08:33:19] [START] pid=5081: worker-1 started (./workers/worker loop 0)
+[2026-11-26 08:33:19] [START] pid=5082: worker-2 started (./workers/worker loop 0)
+[2026-11-26 08:33:19] [START] pid=5083: worker-3 started (./workers/worker normal 20)
+[2026-11-26 08:33:21] [INFO] pid=0: shutdown requested, stopping workers
+[2026-11-26 08:33:21] [SIGNAL] pid=5081: SIGTERM sent to worker-1
+[2026-11-26 08:33:21] [SIGNAL] pid=5082: SIGTERM sent to worker-2
+[2026-11-26 08:33:21] [SIGNAL] pid=5083: SIGTERM sent to worker-3
+[2026-11-26 08:33:21] [EXIT] pid=5081: worker-1 stopped during shutdown: exit code 0
+[2026-11-26 08:33:21] [EXIT] pid=5082: worker-2 stopped during shutdown: exit code 0
+[2026-11-26 08:33:21] [EXIT] pid=5083: worker-3 stopped during shutdown: exit code 0
+[2026-11-26 08:33:21] [INFO] pid=0: watchdog shutdown complete

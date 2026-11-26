@@ -1,0 +1,15 @@
+[2026-11-26 08:32:10] [INFO] pid=0: watchdog starting
+[2026-11-26 08:32:10] [START] pid=4902: worker-1 started (./workers/worker loop 0)
+[2026-11-26 08:32:10] [START] pid=4903: worker-2 started (./workers/worker loop 0)
+[2026-11-26 08:32:10] [START] pid=4904: worker-3 started (./workers/worker normal 20)
+[2026-11-26 08:32:15] [CHECK] pid=0: periodic check: 3/3 workers running
+[2026-11-26 08:32:20] [CHECK] pid=0: periodic check: 3/3 workers running
+[2026-11-26 08:32:25] [CHECK] pid=0: periodic check: 3/3 workers running
+[2026-11-26 08:32:30] [CHECK] pid=0: periodic check: 3/3 workers running
+[2026-11-26 08:32:30] [EXIT] pid=4904: worker-3 exited normally (exit code 0), not restarting
+[2026-11-26 08:32:32] [INFO] pid=0: shutdown requested, stopping workers
+[2026-11-26 08:32:32] [SIGNAL] pid=4902: SIGTERM sent to worker-1
+[2026-11-26 08:32:32] [SIGNAL] pid=4903: SIGTERM sent to worker-2
+[2026-11-26 08:32:32] [EXIT] pid=4902: worker-1 stopped during shutdown: killed by signal 2 (Interrupt)
+[2026-11-26 08:32:32] [EXIT] pid=4903: worker-2 stopped during shutdown: killed by signal 2 (Interrupt)
+[2026-11-26 08:32:32] [INFO] pid=0: watchdog shutdown complete
