@@ -13,6 +13,7 @@
 
 #define MAX_RESTARTS       3
 #define CHECK_INTERVAL_SEC 5
+#define MAX_WORKER_ARG 4
 
 typedef enum {
     PM_IDLE = 0,
@@ -24,7 +25,7 @@ typedef enum {
 
 typedef struct {
     const char *name;
-    char       *argv[4];
+    char       *argv[MAX_WORKER_ARG];
     pid_t       pid;
     pm_state_t  state;
     int         restart_count;
@@ -210,9 +211,13 @@ void pm_handle_children(void)
             break;
         } else if (errno == EINTR) {
             continue;
-        } else {
-            break;
-        }
+        } else if (errno == ECHILD) { // Added for unexpected waitpid errors. Should be tested again with make clean make ./watchdog.
+                break;
+            } else {
+                snprintf(msg, sizeof(msg), "waitpid unexpected error: %s", strerror(errno));
+                log_write("WARN", 0, msg);
+                break;
+            }
     }
 }
 
@@ -221,13 +226,12 @@ void pm_periodic_check(void)
     int  i;
     int  alive = 0;
     char msg[160];
+    char alive_list[128] = "";
 
-    if (!g_alarm_fired)
-        return;
+    if (!g_alarm_fired) return;
     g_alarm_fired = 0;
 
-    if (shutting_down)
-        return;
+    if (shutting_down) return;
 
     for (i = 0; i < NUM_WORKERS; i++) {
         if (workers[i].state != PM_RUNNING)
@@ -237,12 +241,16 @@ void pm_periodic_check(void)
             log_write("CRASH", workers[i].pid, msg);
             restart_or_give_up(i);
         }
-        if (workers[i].state == PM_RUNNING)
+        if (workers[i].state == PM_RUNNING) {
             alive++;
-    }
+            char temp[64];
+            snprintf(temp, sizeof(temp), "%s(%d) ", workers[i].name, workers[i].pid);
+            strncat(alive_list, temp, sizeof(alive_list) - strlen(alive_list) - 1);
+        }
+        }
 
-    snprintf(msg, sizeof(msg), "periodic check: %d/%d workers running",
-             alive, NUM_WORKERS);
+    snprintf(msg, sizeof(msg), "periodic check: %d/%d workers running [%s]",
+             alive, NUM_WORKERS, alive_list);
     log_write("CHECK", 0, msg);
 }
 
