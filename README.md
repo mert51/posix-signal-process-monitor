@@ -14,6 +14,14 @@ A POSIX signal-based process supervision system implemented in C for Linux envir
 posix-signal-process-monitor/
 ├── Makefile                  # Incremental build and cleanup rules
 ├── README.md                 # Installation, usage, and testing guide
+├── docs/                     # Project documentation and verification logs
+│   ├── REPORT.pdf            # Final consolidated group project report
+│   ├── REPORT_S1.pdf         # Student 1 module report
+│   └── s1_evidence/          # Manual signal and edge-case test logs
+│       ├── ctrl_c_testi.txt
+│       ├── double_sigint_testi.txt
+│       ├── restart_testi.txt
+│       └── sigkill_timeout_testi.txt
 ├── include/                  # Module header files
 │   ├── logger.h              # POSIX file logging interface
 │   ├── process_manager.h     # Child process lifecycle structures
@@ -25,10 +33,8 @@ posix-signal-process-monitor/
 │   └── logger.c              # Unbuffered open/write/close logging
 ├── workers/                  # Simulated child worker executables
 │   └── worker.c              # Supports normal, crash, and loop modes
-├── tests/                    # Automated test scripts
-│   └── test_scenarios.sh     # End-to-end verification suite with PASS/FAIL checks
-└── docs/                     # Project documentation
-    └── REPORT.pdf            # Final project report
+└── tests/                    # Automated test scripts
+    └── test_scenarios.sh     # End-to-end verification suite with PASS/FAIL checks
 ```
 
 ## Build Instructions
@@ -58,7 +64,7 @@ Upon startup, `watchdog` spawns three managed child workers:
 - `worker-2` (`./workers/worker loop 0`) — runs continuously until terminated
 - `worker-3` (`./workers/worker normal 20`) — runs for 20 seconds and exits cleanly with status `0` (not restarted)
 
-All lifecycle events (`INFO`, `START`, `STATUS`, `CHECK`, `CRASH`, `RESTART`, `GAVE_UP`, `SIGNAL`, `EXIT`) are recorded with timestamps in `watchdog.log`.
+All lifecycle events (`INFO`, `START`, `STATUS`, `CHECK`, `CRASH`, `RESTART`, `GAVE_UP`, `WARN`, `SIGNAL`, `EXIT`) are recorded with timestamps in `watchdog.log`.
 
 ## Signal Controls and Manual Testing
 
@@ -77,10 +83,12 @@ Find the running `watchdog` PID (e.g., via `ps x | grep watchdog`) and send POSI
   kill -SIGTERM <WATCHDOG_PID>
   ```
 
-## Automated Test Suite
+## Automated Test Suite and Evidence
 
 Run the automated test script to verify compilation, `SIGUSR1` status reporting, `SIGKILL` crash recovery (`GAVE_UP` after 3 restarts), normal worker exit, and zombie-free `SIGTERM` shutdown with automated `PASS`/`FAIL` checks:
 
 ```bash
 bash tests/test_scenarios.sh
 ```
+
+Additional manual edge-case test logs (`Ctrl+C`, repeated `SIGINT`, restart limit, and `SIGKILL` shutdown timeout escalation) are documented under `docs/s1_evidence/`.
