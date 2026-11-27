@@ -192,7 +192,7 @@ void pm_handle_children(void)
 {
     int   status;
     pid_t pid;
-    int   i;
+    int i;
     char  msg[96];
 
     g_sigchld_received = 0;
@@ -211,7 +211,7 @@ void pm_handle_children(void)
             break;
         } else if (errno == EINTR) {
             continue;
-        } else if (errno == ECHILD) { // Added for unexpected waitpid errors. Should be tested again with make clean make ./watchdog.
+        } else if (errno == ECHILD) { // Added for unexpected waitpid errors.
                 break;
             } else {
                 snprintf(msg, sizeof(msg), "waitpid unexpected error: %s", strerror(errno));
@@ -225,7 +225,7 @@ void pm_periodic_check(void)
 {
     int  i;
     int  alive = 0;
-    char msg[160];
+    char msg[256];
     char alive_list[128] = "";
 
     if (!g_alarm_fired) return;
